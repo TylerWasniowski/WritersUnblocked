@@ -1,0 +1,28 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Writers Unblocked</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="main-content">
+<a href="/" id="main-heading"><h1>Writers Unblocked</h1></a>
+<div id="navigation">
+</div>
+<h2 id="story-header">Story <span id="story-id-header">%story-id%</span></h2>
+
+<!-- <h3>Previous Story</h3> -->
+<div class="previous-story-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+
+<form class="story-form" action="update-story">
+<!-- Update existing story by its story-id, or if there is no story with such id, create a new story with a new id (and ignore this story-id value) -->
+<input class="story-id" value="%story-id%" hidden="hidden"></input>
+<!-- <label for="input-story-text">Input</label> -->
+<!-- TODO: replace maxlength value with %max-input-length% or something to that accord -->
+<textarea class="input-text" maxlength="240"></textarea>
+<span class="characters-remaining">Chars left: <span class="characters-remaining-value">%characters-remaining%</span></span>
+<input type="submit" value="Submit"></input>
+</form>
+</div>
+</body>
+</html>
