@@ -1,4 +1,4 @@
-defmodule WritersUnblockedWeb.PageController do
+defmodule WritersUnblockedWeb.HomeController do
   use WritersUnblockedWeb, :controller
 
   def index(conn, _params) do
