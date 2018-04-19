@@ -1,11 +1,4 @@
-<div id="main-content">
-    <a href="/" id="main-heading">
-        <h1>Writers Unblocked</h1>
-    </a>
-    <div id="navigation">
-        <a href="/new_story">New Story</a>
-        <a href="/continue_story">Continue Story</a>
-    </div>
-    <ul id="stories-list">
-    </ul>
+<div class="center">
+  <a class="button" href="/story?action=new">New Story</a>
+  <a class="button" href="/story?action=continue">Continue Story</a>
 </div>

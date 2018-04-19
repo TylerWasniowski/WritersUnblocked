@@ -3,22 +3,23 @@ html
     font-family: "Segoe UI", sans-serif;
 }
 
-#main-content
+.header, .center
 {
     width: 50%;
     margin: auto;
     text-align: center;
 }
 
-a#main-heading
+#main-heading
 {
     text-decoration: none;
     color: inherit;
 }
 
-#navigation a,
-.story-form input[type=submit]
+.button
 {
+    border: solid 1px #BCE;
+    background-color: #DEF;
     text-decoration: none;
     color: inherit;
     margin: 0.25em;
@@ -27,21 +28,13 @@ a#main-heading
     font-size: inherit;
 }
 
-.story-form input[type=submit]
+a.button:hover, a.button:active {
+    text-decoration: none;
+}
+
+.story-form #submit
 {
     float: right;
-}
-
-#navigation a
-{
-    border: solid 1px #BCE;
-    background-color: #DEF;
-}
-
-input[type=submit]
-{
-    border: solid 1px #9BE;
-    background-color: #ACF;
 }
 
 .previous-story-text
