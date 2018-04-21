@@ -3,23 +3,28 @@ html
     font-family: "Segoe UI", sans-serif;
 }
 
-.header, .center
+body
 {
+    background: url('/images/hypnotize.png');
+}
+
+#main-content
+{
+    min-width: 360px;
     width: 50%;
     margin: auto;
     text-align: center;
 }
 
-#main-heading
+a#main-heading
 {
     text-decoration: none;
     color: inherit;
 }
 
-.button
+#navigation a,
+.story-form input[type=submit]
 {
-    border: solid 1px #BCE;
-    background-color: #DEF;
     text-decoration: none;
     color: inherit;
     margin: 0.25em;
@@ -28,30 +33,45 @@ html
     font-size: inherit;
 }
 
-a.button:hover, a.button:active {
-    text-decoration: none;
-}
-
-.story-form #submit
+.story-form input[type=submit]
 {
     float: right;
 }
 
-.previous-story-text
+#navigation a
+{
+    border: solid 1px #BCE;
+    background-color: #DEF;
+}
+
+input[type=submit]
+{
+    border: solid 1px #9BE;
+    background-color: #ACF;
+}
+
+.current-story-text
 {
     text-align: justify;
     text-justify: inter-word;
-    padding-bottom: 1em;
+    padding: 0 1em;
+    font-family: "Georgia", serif;
+}
+
+.story-form
+{
+    margin: 1em;
 }
 
 .story-form .input-text
 {
     min-width: 100%;
     max-width: 100%;
-    min-height: 8em;
+    min-height: 7.5em;
     display: block;
     border: solid 1px #AAA;
     border-radius: 0.125em;
+    font-family: "Georgia", serif;
 }
 
 .story-form .characters-remaining
