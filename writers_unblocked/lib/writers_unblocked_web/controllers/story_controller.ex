@@ -3,7 +3,11 @@ defmodule WritersUnblockedWeb.StoryController do
   require Logger
 
   def index(conn, params) do
-    Logger.info elem(Map.fetch(params, "action"), 1)
+    params
+    |> Map.fetch("action")
+    |> elem(1)
+    |> Logger.info
+    
     render conn, "index.html"
   end
 end
