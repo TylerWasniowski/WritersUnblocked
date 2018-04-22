@@ -1,0 +1,18 @@
+<h2 id="story-header">
+    Story <span id="story-id-header">%story-id%</span>
+</h2>
+
+<!-- <h3>Current Story</h3> -->
+<div class="current-story-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a...
+</div>
+
+<form class="story-form" action="update-story">
+    <input class="story-id" value="%session-id%" hidden="hidden"></input>
+    <!-- <label for="input-story-text">Input</label> -->
+    <!-- TODO: replace maxlength value with %max-input-length% or something to that accord -->
+    <textarea class="input-text" maxlength="240" placeholder="What happens next?" name="input"></textarea>
+    <span class="characters-remaining">Chars left:
+        <span class="characters-remaining-value">%characters-remaining%</span>
+    </span>
+    <input id="submit" class="button" type="submit" value="Submit"></input>
+</form>
