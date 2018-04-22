@@ -17,7 +17,13 @@ defmodule WritersUnblockedWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", HomeController, :index
-    get "/story", StoryController, :index
+    get "/new-story",      StoryController, :on_new
+    get "/continue-story", StoryController, :on_continue
+
+    get "/create-story", PostController, :on_create
+    get "/update-story", PostController, :on_update
+
+    get "/view-id",      PostController, :on_view_id
   end
 
   # Other scopes may use custom stacks.

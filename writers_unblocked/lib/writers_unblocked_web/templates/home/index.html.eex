@@ -1,4 +1,15 @@
-<div class="center" id="navigation">
-  <a class="button" href="/story?action=new">New Story</a>
-  <a class="button" href="/story?action=continue">Continue Story</a>
+<div class="left" id="navigation">
+  <a class="button" href="/new-story?>New Story</a>
+  <a class="button" href="/continue-story?">Continue Story</a>
 </div>
+
+
+<!-- new story button disapears if ad below -->
+
+<div class="right">
+  <form action="/view-id">
+    view a finished story by id: <input type="number" step="1" pattern="\d+" name="id"/><br> <!-- verify not only is integer on server, but responds to valid id -->
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
