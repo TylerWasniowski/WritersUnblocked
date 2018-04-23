@@ -34,7 +34,7 @@ defmodule WritersUnblockedWeb.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_writers_unblocked_key",
+    key: "session_data",
     signing_salt: "7kLV3F82"
 
   plug WritersUnblockedWeb.Router

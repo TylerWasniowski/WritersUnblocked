@@ -7,7 +7,7 @@ defmodule WritersUnblockedWeb.StoryController do
     |> Map.fetch("action")
     |> elem(1)
     |> Logger.info
-    
+
     render conn, "index.html"
   end
 end

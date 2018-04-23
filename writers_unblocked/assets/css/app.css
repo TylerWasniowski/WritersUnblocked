@@ -3,11 +3,6 @@ html
     font-family: "Segoe UI", sans-serif;
 }
 
-body
-{
-    background: url('/images/hypnotize.png');
-}
-
 #main-content
 {
     min-width: 360px;
