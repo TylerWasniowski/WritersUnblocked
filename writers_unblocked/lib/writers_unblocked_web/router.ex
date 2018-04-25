@@ -18,6 +18,8 @@ defmodule WritersUnblockedWeb.Router do
 
     get "/", HomeController, :index
     get "/story", StoryController, :index
+
+    get "/update-story", PostController, :on_update_submit
   end
 
   # Other scopes may use custom stacks.

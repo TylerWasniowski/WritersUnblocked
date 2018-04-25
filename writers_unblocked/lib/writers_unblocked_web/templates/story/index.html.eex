@@ -10,7 +10,7 @@
     <input class="story-id" value="%session-id%" hidden="hidden"></input>
     <!-- <label for="input-story-text">Input</label> -->
     <!-- TODO: replace maxlength value with %max-input-length% or something to that accord -->
-    <textarea class="input-text" maxlength="240" placeholder="What happens next?"></textarea>
+    <textarea class="input-text" maxlength="240" placeholder="What happens next?" name="append-input"></textarea>
     <span class="characters-remaining">Chars left:
         <span class="characters-remaining-value">%characters-remaining%</span>
     </span>
