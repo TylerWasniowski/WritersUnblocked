@@ -6,7 +6,7 @@ defmodule WritersUnblocked.Session do
     use Ecto.Schema
 
     schema "sessions" do
-        # Currently these are atomic entries w/o user or story ids
+        # Currently these are atomic entries w/o users, etc (just story id)
         belongs_to :story, Story
     end
 
