@@ -6,6 +6,7 @@ defmodule WritersUnblocked.Repo do
   DATABASE_URL environment variable.
   """
   def init(_, opts) do
+    # I think this gets overrided by config in dev.ex / prod.ex
     {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
   end
 end
