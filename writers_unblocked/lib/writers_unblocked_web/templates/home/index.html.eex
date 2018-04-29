@@ -1,4 +1,7 @@
 <div class="center" id="navigation">
   <a class="button" href="/story?action=new">New Story</a>
   <a class="button" href="/story?action=continue">Continue Story</a>
+  <form action="/view-id">
+    <input type="number" pattern="\d+" name="input"/>
+  </form>
 </div>
