@@ -8,7 +8,7 @@ defmodule WritersUnblocked.Story do
     schema "stories" do
         field :title, :string
         field :body, :string
-        #has_one :session, Session
+        belongs_to :session, WritersUnblocked.Session
     end
 
     def changeset(story, params \\ %{}) do

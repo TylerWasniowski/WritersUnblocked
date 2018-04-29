@@ -8,7 +8,7 @@ defmodule WritersUnblocked.Session do
 
     schema "sessions" do
         # Currently these are atomic entries w/o users, etc (just story id)
-        belongs_to :story, Story
+        #belongs_to :story, WritersUnblocked.Story
     end
 
     def changeset(session, params \\ %{}) do
