@@ -8,11 +8,17 @@ defmodule WritersUnblockedWeb.HomeController do
     if get_session(conn, :session_id) do
       render conn, "index.html"
     else
-      %Session{}
+      # Make a new session in the database, and save the id
+      session_id = %Session{}
       |> Repo.insert
+      |> elem(1)
+      |> Map.fetch(:id)
+      |> elem(1)
+
+      Logger.debug "Created session with id: #{session_id}"
 
       conn
-      |> put_session(:session_id, 255)
+      |> put_session(:session_id, session_id)
       |> render("index.html")
     end
   end
