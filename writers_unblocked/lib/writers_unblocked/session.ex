@@ -4,6 +4,7 @@ import Ecto.Query
 
 defmodule WritersUnblocked.Session do
     use Ecto.Schema
+    alias WritersUnblocked.Story
 
     schema "sessions" do
         # Currently these are atomic entries w/o users, etc (just story id)
