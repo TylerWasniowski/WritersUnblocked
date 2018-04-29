@@ -19,6 +19,6 @@ defmodule WritersUnblocked.Story do
         |> validate_length(:title, min: 3)
         |> validate_length(:title, max: 42)
         |> validate_length(:body, min: 3)
-        |> validate_length(:body, max: 3000)
+        |> validate_length(:body)
     end
 end
