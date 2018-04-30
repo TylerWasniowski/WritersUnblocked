@@ -10,19 +10,19 @@ defmodule WritersUnblockedWeb.StoryController do
 
   def index(conn, params) do
     # Make sure connection has a session
-    conn =
-      case get_session(conn, :session_id) do
-        nil -> put_session(
-          conn,
-          :session_id,
-          %Session{}
-          |> Repo.insert
-          |> elem(1)
-          |> Map.fetch(:id)
-          |> elem(1)
-        )
-        _ -> conn
-      end
+    # conn =
+      # case get_session(conn, :story_id) do
+      #   nil -> put_session(
+      #     conn,
+      #     :story_id,
+      #     %Session{}
+      #     |> Repo.insert
+      #     |> elem(1)
+      #     |> Map.fetch(:id)
+      #     |> elem(1)
+      #   )
+      #   _ -> conn
+      # end
 
     # Get previous story
     story =
@@ -50,8 +50,15 @@ defmodule WritersUnblockedWeb.StoryController do
                 |> Repo.get(List.first(head))
                 |> Story.changeset(%{locked: 'true'})
 
+                conn =
+                  put_session(
+                    conn,
+                    :story_id,
+                    List.first(head)
+                  )
+
                 head
-                # |> List.delete_at(0) # ????
+                |> List.delete_at(0)
             end
           # New story? Empty title and empty text.
           _ -> ["",""]
@@ -78,13 +85,17 @@ defmodule WritersUnblockedWeb.StoryController do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        story_item = ""
+        story_item =
+          Story
+          |> Repo.get(get_session(conn, :story_id))
           # I know you guys are working hard and thank you, but I dont go crazy with the sessions thing.
 					# Also everyone should do mix phx.server and test things out in browser before pushing changes.
 					# Story
           # |> Repo.get(get_session(conn, :session_id))
-					# note the false
-        if (true) do # (story_item == nil) do # checks if the story is already in the database
+          # note the false
+
+
+        if (story_item == nil) do # checks if the story is already in the database
           newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
           WritersUnblocked.Repo.insert(newstory)
           text conn, "Added Story to Database. You clicked the update story button with form input: " <> input
