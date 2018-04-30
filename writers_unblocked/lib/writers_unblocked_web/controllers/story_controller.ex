@@ -113,7 +113,7 @@ defmodule WritersUnblockedWeb.StoryController do
           # |> SQL.query!("UPDATE stories
           # SET locked = 'false'
           # WHERE id = #{get_session(conn, :story_id)} LIMIT 1", [])
-          text conn, "Found something: " <> story_item
+          # text conn, "Found something: " <> story_item
         end
         text conn, "testing printable"
       true ->
