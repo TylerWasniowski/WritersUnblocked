@@ -37,7 +37,7 @@ defmodule WritersUnblockedWeb.StoryController do
               Repo
               |> SQL.query!("SELECT id, title, body
               FROM stories
-              WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
+              WHERE locked = 'false' ORDER BY RANDOM() LIMIT 1", [])
               |> Map.fetch(:rows)
               |> elem(1)
             ) do
@@ -46,10 +46,9 @@ defmodule WritersUnblockedWeb.StoryController do
               # Rows is a list of lists of cell values, we know we will have at most one row so we take the first.
               [head | _] ->
                 # Assigns session id to story
-                Repo
-                |> SQL.query!("UPDATE stories
-                SET session = #{get_session(conn, :session_id)}
-                WHERE id = #{List.first(head)}", [])
+                Story
+                |> Repo.get(List.first(head))
+                |> Story.changeset(%{locked: 'true'})
 
                 head
                 |> List.delete_at(0)
