@@ -38,4 +38,6 @@ WORKDIR /app
 # create the digests
 RUN mix phx.digest
 
+RUN mix ecto.migrate
+
 CMD mix ecto.create && mix phx.server
