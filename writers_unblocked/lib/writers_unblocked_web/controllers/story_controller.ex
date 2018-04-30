@@ -90,7 +90,7 @@ defmodule WritersUnblockedWeb.StoryController do
 					# Story
           # |> Repo.get(get_session(conn, :session_id))
           # note the false
-
+          Story |> Repo.all
 
         if (!get_session(conn, :story_id)) do # checks if the story is already in the database
           newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
