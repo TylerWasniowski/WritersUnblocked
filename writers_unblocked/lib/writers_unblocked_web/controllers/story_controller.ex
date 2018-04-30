@@ -37,7 +37,8 @@ defmodule WritersUnblockedWeb.StoryController do
               Repo
               |> SQL.query!("SELECT id, title, body
               FROM stories
-              WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
+							ORDER BY RANDOM() LIMIT 1", [])
+							# WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
               |> Map.fetch(:rows)
               |> elem(1)
             ) do
@@ -52,7 +53,7 @@ defmodule WritersUnblockedWeb.StoryController do
                 WHERE id = #{List.first(head)}", [])
 
                 head
-                |> List.delete_at(0)
+                # |> List.delete_at(0) # ????
             end
           # New story? Empty title and empty text.
           _ -> ["",""]
@@ -79,11 +80,13 @@ defmodule WritersUnblockedWeb.StoryController do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        story_item =
-          Story
-          |> Repo.get(get_session(conn, :session_id))
-
-        if (story_item == nil) do # checks if the story is already in the database
+        story_item = ""
+          # I know you guys are working hard and thank you, but I dont go crazy with the sessions thing.
+					# Also everyone should do mix phx.server and test things out in browser before pushing changes.
+					# Story
+          # |> Repo.get(get_session(conn, :session_id))
+					# note the false
+        if (true) do # (story_item == nil) do # checks if the story is already in the database
           newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
           WritersUnblocked.Repo.insert(newstory)
           text conn, "Added Story to Database. You clicked the update story button with form input: " <> input
