@@ -3,7 +3,6 @@ import Ecto.Query, only: [from: 2, where: 2]
 defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
-  alias WritersUnblocked.Session
   alias WritersUnblocked.Story
   alias Ecto.Adapters.SQL
   require Logger
@@ -45,10 +44,11 @@ defmodule WritersUnblockedWeb.StoryController do
               [] -> ["", ""]
               # Rows is a list of lists of cell values, we know we will have at most one row so we take the first.
               [head | _] ->
-                # Assigns session id to story
+                # Assigns story id to story
                 Story
                 |> Repo.get(List.first(head))
                 |> Story.changeset(%{locked: 'true'})
+                |> Repo.update()
 
                 conn =
                   put_session(
@@ -85,9 +85,6 @@ defmodule WritersUnblockedWeb.StoryController do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        story_item =
-          Story
-          |> Repo.get(get_session(conn, :story_id))
           # I know you guys are working hard and thank you, but I dont go crazy with the sessions thing.
 					# Also everyone should do mix phx.server and test things out in browser before pushing changes.
 					# Story
@@ -95,11 +92,18 @@ defmodule WritersUnblockedWeb.StoryController do
           # note the false
 
 
-        if (story_item == nil) do # checks if the story is already in the database
+        if (!get_session(conn, :story_id)) do # checks if the story is already in the database
           newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
           WritersUnblocked.Repo.insert(newstory)
           text conn, "Added Story to Database. You clicked the update story button with form input: " <> input
         else
+          story_item =
+            Story
+            |> Repo.get(get_session(conn, :story_id))
+
+          story_item
+          |> Story.changeset(%{body: input})
+          |> Repo.update()
           text conn, "Found something: " <> story_item
         end
         text conn, "testing printable"
