@@ -30,13 +30,19 @@ defmodule WritersUnblockedWeb.StoryController do
         |> Map.fetch("action")
         |> elem(1)
         ) do
-          # Continuing existing story? Get story from database
+          # Continuing existing story? Get story from database.
           "continue" ->
-            Repo
-            |> SQL.query!("SELECT title, body FROM stories WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
-            |> Map.fetch(:rows)
-            |> elem(1)
-            |> List.first
+            case (
+              Repo
+              |> SQL.query!("SELECT title, body FROM stories WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
+              |> Map.fetch(:rows)
+              |> elem(1)
+            ) do
+              # No available stories? Making a new story.
+              [] -> ["", ""]
+              # Rows is a list of lists of cell values, we know we will have at most one row so we take the first.
+              [head | _] -> head
+            end
           # New story? Empty title and empty text.
           _ -> ["", ""]
         end
