@@ -44,7 +44,7 @@ defmodule WritersUnblockedWeb.StoryController do
               [head | _] -> head
             end
           # New story? Empty title and empty text.
-          _ -> ["", ""]
+          _ -> ["",""]
         end
     story_title =
       List.first story
@@ -54,9 +54,8 @@ defmodule WritersUnblockedWeb.StoryController do
 
     Logger.debug story_text
     #JON'S CODE HERE
-
-
-    render conn, "index.html"
+	
+    render conn, "index.html", title: story_title, body: story_text
   end
 
   def submit_entry(conn, %{"append-input" => input} = params) do
@@ -78,3 +77,10 @@ defmodule WritersUnblockedWeb.StoryController do
 
   end
 end
+
+#Select random story - Tyler
+#Pass into view then into template and display the story in continue story - Jon
+
+#render_to_iodata?
+
+
