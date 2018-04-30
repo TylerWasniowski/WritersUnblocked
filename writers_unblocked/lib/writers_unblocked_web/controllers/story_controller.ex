@@ -32,4 +32,23 @@ defmodule WritersUnblockedWeb.StoryController do
     |> Logger.debug
     render conn, "index.html"
   end
+
+  def submit_entry(conn, %{"append-input" => input} = params) do
+
+    IO.puts("params inspection: ")
+    IO.inspect(params)
+
+    IO.puts("conn inspection: ")
+    IO.inspect(conn)
+
+    cond do
+      byte_size(input) == 0 ->
+        text conn, "No form data."
+      String.printable?(input) ->
+        text conn, "You clicked the update story button with form input: " <> input
+      true ->
+        text conn, "Data contains non-printable chars."
+    end
+
+  end
 end
