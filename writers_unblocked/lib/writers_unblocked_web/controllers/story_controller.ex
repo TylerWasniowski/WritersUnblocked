@@ -36,7 +36,7 @@ defmodule WritersUnblockedWeb.StoryController do
               Repo
               |> SQL.query!("SELECT id, title, body
               FROM stories
-              WHERE locked = 'false' ORDER BY RANDOM() LIMIT 1", [])
+              WHERE locked IS NULL OR locked = 'false' ORDER BY RANDOM() LIMIT 1", [])
               |> Map.fetch(:rows)
               |> elem(1)
             ) do
@@ -49,6 +49,10 @@ defmodule WritersUnblockedWeb.StoryController do
                 |> Repo.get(List.first(head))
                 |> Story.changeset(%{locked: 'true'})
                 |> Repo.update()
+                # Repo
+                # |> SQL.query!("UPDATE stories
+                # SET locked = 'true'
+                # WHERE id = #{List.first(head)} LIMIT 1", [])
 
                 conn =
                   put_session(
@@ -104,6 +108,11 @@ defmodule WritersUnblockedWeb.StoryController do
           story_item
           |> Story.changeset(%{body: input})
           |> Repo.update()
+
+          # Repo
+          # |> SQL.query!("UPDATE stories
+          # SET locked = 'false'
+          # WHERE id = #{get_session(conn, :story_id)} LIMIT 1", [])
           text conn, "Found something: " <> story_item
         end
         text conn, "testing printable"
