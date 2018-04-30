@@ -7,7 +7,7 @@
 </p>
 
 <form class="story-form" action="update-story">
-    <input class="story-id" value="%session-id%" hidden="hidden"></input>
+    <input class="story-id" value="storyid" hidden="hidden" name="story-id"></input>
     <!-- <label for="input-story-text">Input</label> -->
     <!-- TODO: replace maxlength value with %max-input-length% or something to that accord -->
     <textarea class="input-text" maxlength="240" placeholder="What happens next?" name="append-input"></textarea>
