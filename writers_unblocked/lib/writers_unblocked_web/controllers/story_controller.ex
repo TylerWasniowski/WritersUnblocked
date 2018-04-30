@@ -1,33 +1,52 @@
+import Ecto.Query, only: [from: 2]
+
 defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
   alias WritersUnblocked.Session
+  alias Ecto.Adapters.SQL
   require Logger
 
   def index(conn, params) do
-    if get_session(conn, :session_id) do
-      render conn, "index.html"
-    else
-      # Make a new session in the database, and save the id
-      session_id = %Session{}
-      |> Repo.insert
-      |> elem(1)
-      |> Map.fetch(:id)
-      |> elem(1)
+    # Make sure connection has a session
+    conn =
+      case get_session(conn, :session_id) do
+        nil -> put_session(
+          conn,
+          :session_id,
+          %Session{}
+          |> Repo.insert
+          |> elem(1)
+          |> Map.fetch(:id)
+          |> elem(1)
+        )
+        _ -> conn
+      end
 
-      Logger.debug "Created session with id: #{session_id}"
+    # Get previous story
+    story =
+      case (
+        params
+        |> Map.fetch("action")
+        |> elem(1)
+        ) do
+          # Continuing existing story? Get story from database
+          "continue" ->
+            Repo
+            |> SQL.query!("SELECT title, body FROM stories WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
+            |> Map.fetch(:rows)
+            |> elem(1)
+            |> List.first
+          # New story? Empty title and empty text.
+          _ -> ["", ""]
+        end
+    story_title =
+      List.first story
+    story_text =
+      story
+      |> Enum.at(1)
 
-      conn
-      |> put_session(:session_id, session_id)
-      |> render("index.html")
-    end
-
-    params
-    |> Map.fetch("action")
-    |> elem(1)
-    |> Logger.debug
-
-    story_text = "PLACEHOLDER"
+    Logger.debug story_text
     #JON'S CODE HERE
 
 
