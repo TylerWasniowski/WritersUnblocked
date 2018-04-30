@@ -4,11 +4,12 @@ import Ecto.Query
 
 defmodule WritersUnblocked.Story do
     use Ecto.Schema
+    alias WritersUnblocked.Session
 
     schema "stories" do
         field :title, :string
         field :body, :string
-        #has_one :session, Session
+        belongs_to :session, Session
     end
 
     def changeset(story, params \\ %{}) do
@@ -18,6 +19,5 @@ defmodule WritersUnblocked.Story do
         |> validate_length(:title, min: 3)
         |> validate_length(:title, max: 42)
         |> validate_length(:body, min: 3)
-        |> validate_length(:body, max: 3000)
     end
 end
