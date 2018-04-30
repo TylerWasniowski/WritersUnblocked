@@ -27,9 +27,10 @@ defmodule WritersUnblockedWeb.StoryController do
     |> elem(1)
     |> Logger.debug
 
-    conn
-    |> get_session(:session_id)
-    |> Logger.debug
+    story_text = "PLACEHOLDER"
+    #JON'S CODE HERE
+
+
     render conn, "index.html"
   end
 
