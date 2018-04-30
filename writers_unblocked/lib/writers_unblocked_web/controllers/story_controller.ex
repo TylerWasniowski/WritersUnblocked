@@ -65,6 +65,9 @@ defmodule WritersUnblockedWeb.StoryController do
 
     IO.puts("conn inspection: ")
     IO.inspect(conn)
+	
+	#Compilation error, not defined. Tentative fix before demo:
+	storyid = "1" # In quotes, or else: Postgrex expected a binary, got 1
 
     cond do
       byte_size(input) == 0 ->
