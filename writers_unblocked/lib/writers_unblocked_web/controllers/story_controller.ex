@@ -1,9 +1,10 @@
-import Ecto.Query, only: [from: 2]
+import Ecto.Query, only: [from: 2, where: 2]
 
 defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
   alias WritersUnblocked.Session
+  alias WritersUnblocked.Story
   alias Ecto.Adapters.SQL
   require Logger
 
@@ -34,27 +35,35 @@ defmodule WritersUnblockedWeb.StoryController do
           "continue" ->
             case (
               Repo
-              |> SQL.query!("SELECT title, body FROM stories WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
+              |> SQL.query!("SELECT id, title, body
+              FROM stories
+              WHERE session IS NULL ORDER BY RANDOM() LIMIT 1", [])
               |> Map.fetch(:rows)
               |> elem(1)
             ) do
               # No available stories? Making a new story.
               [] -> ["", ""]
               # Rows is a list of lists of cell values, we know we will have at most one row so we take the first.
-              [head | _] -> head
+              [head | _] ->
+                # Assigns session id to story
+                Repo
+                |> SQL.query!("UPDATE stories
+                SET session = #{get_session(conn, :session_id)}
+                WHERE id = #{List.first(head)}", [])
+
+                head
+                |> List.delete_at(0)
             end
           # New story? Empty title and empty text.
           _ -> ["",""]
         end
     story_title =
-      List.first story
+      story
+      |> Enum.at(0)
     story_text =
       story
       |> Enum.at(1)
 
-    Logger.debug story_text
-    #JON'S CODE HERE
-	
     render conn, "index.html", title: story_title, body: story_text
   end
 
@@ -65,25 +74,21 @@ defmodule WritersUnblockedWeb.StoryController do
 
     IO.puts("conn inspection: ")
     IO.inspect(conn)
-	
-	#Compilation error, not defined. Tentative fix before demo:
-	storyid = "1" # In quotes, or else: Postgrex expected a binary, got 1
 
     cond do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        aquery = from s in "stories", where: s.title == ^storyid, select: s.body # makes a query statement, similar to SQL
-        astory = WritersUnblocked.Repo.all(aquery) # Queries the database, from the "stories" table
+        story_item =
+          Story
+          |> Repo.get(get_session(conn, :session_id))
 
-        storyitem = List.first(astory) # gets the story text from said item
-
-        if (storyitem == nil) do # checks if the story is already in the database
-          newstory = %WritersUnblocked.Story{title: storyid, body: input}
+        if (story_item == nil) do # checks if the story is already in the database
+          newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
           WritersUnblocked.Repo.insert(newstory)
           text conn, "Added Story to Database. You clicked the update story button with form input: " <> input
         else
-          text conn, "Found something: " <> storyitem
+          text conn, "Found something: " <> story_item
         end
         text conn, "testing printable"
       true ->
