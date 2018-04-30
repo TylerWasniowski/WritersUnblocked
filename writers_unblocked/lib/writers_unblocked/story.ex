@@ -4,12 +4,10 @@ import Ecto.Query
 
 defmodule WritersUnblocked.Story do
     use Ecto.Schema
-    alias WritersUnblocked.Session
 
     schema "stories" do
         field :title, :string
         field :body, :string
-        belongs_to :session, Session
     end
 
     def changeset(story, params \\ %{}) do
