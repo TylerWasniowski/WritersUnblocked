@@ -47,7 +47,7 @@ defmodule WritersUnblockedWeb.StoryController do
                 # Assigns story id to story
                 Story
                 |> Repo.get(List.first(head))
-                |> Story.changeset(%{locked: 'true'})
+                |> Story.changeset(%{locked: true})
                 |> Repo.update()
                 # Repo
                 # |> SQL.query!("UPDATE stories
@@ -106,7 +106,7 @@ defmodule WritersUnblockedWeb.StoryController do
             |> Repo.get(get_session(conn, :story_id))
 
           story_item
-          |> Story.changeset(%{body: input})
+          |> Story.changeset(%{body: input, locked: false})
           |> Repo.update()
 
           # Repo
