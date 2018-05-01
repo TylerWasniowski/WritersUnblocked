@@ -1,6 +1,5 @@
 defmodule WritersUnblockedWeb.HomeController do
-  use WritersUnblockedWeb, :controller
-  require Logger
+  use WritersUnblockedWeb, :controller\
 
   def index(conn, _params) do
     render conn, "index.html"
