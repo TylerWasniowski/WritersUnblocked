@@ -60,20 +60,25 @@ defmodule WritersUnblockedWeb.StoryController do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        if (!get_session(conn, :story_id)) do # checks if a story was selected (is a new story if not)
-          newstory = %WritersUnblocked.Story{title: "Placeholder Title", body: input}
-          WritersUnblocked.Repo.insert(newstory)
-        else
-          story_item =
-            Story
-            |> Repo.get(get_session(conn, :story_id))
+        # Checks if a story was selected
+        case get_session(conn, :story_id) do
+          # No story selected? Create new story.
+          nil ->
+            %Story{title: "Placeholder Title", body: input}
+            |> Repo.insert()
 
-          story_item
-          |> Story.changeset(%{body: "#{story_item.body}\n#{input}", locked: false})
-          |> Repo.update()
+          # Story selected? Append to old story.
+          _ ->
+            story_item =
+              Story
+              |> Repo.get(get_session(conn, :story_id))
+
+            story_item
+            |> Story.changeset(%{body: "#{story_item.body}\n#{input}", locked: false})
+            |> Repo.update()
         end
 
-        # Go back to the home page
+        # Unlink story and go back to the home page
         conn
         |> delete_session(:story_id)
         |> redirect(to: "/")
