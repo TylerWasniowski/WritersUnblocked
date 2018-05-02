@@ -1,5 +1,3 @@
-<p style="text-align:center;"><strong>Story ID: </strong><span id="story-id-header">%story-id%</span></p>
-
 <p style="text-align:center;"><strong>Title: </strong><ins><%= @title %><ins></p>
 <p style="text-align:center;">The story so far...</p>
 <p>

@@ -10,6 +10,7 @@ defmodule WritersUnblockedWeb.StoryController do
       case get_session(conn, :story_id) do
         nil ->
           case action do
+            # Continuing story? Assign story if available.
             "continue" ->
               case (
                 # Select random story id from database.
@@ -35,6 +36,7 @@ defmodule WritersUnblockedWeb.StoryController do
 
                   put_session(conn, :story_id, story_id)
               end
+
             # New story? Don't assign story.
             _ -> conn
           end
@@ -46,7 +48,7 @@ defmodule WritersUnblockedWeb.StoryController do
 
     case get_session(conn, :story_id) do
       # New story? Previous story empty.
-      nil -> render conn, "index.html", title: "", body: ""
+      nil -> render conn, "index.html", title: "New Story", body: ""
       # Continuing existing story? Get story from database.
       story_id ->
         story = Story
@@ -60,7 +62,7 @@ defmodule WritersUnblockedWeb.StoryController do
       byte_size(input) == 0 ->
         text conn, "No form data."
       String.printable?(input) ->
-        # Checks if a story was selected
+        # Inserts/updates story.
         case get_session(conn, :story_id) do
           # No story selected? Create new story.
           nil ->
