@@ -58,9 +58,13 @@ defmodule WritersUnblockedWeb.StoryController do
   end
 
   def submit_entry(conn, %{"append-input" => input}) do
+    number_of_bytes = byte_size(input)
+    number_of_characters = String.length(input)
     cond do
-      byte_size(input) == 0 ->
+      number_of_bytes == 0 ->
         text conn, "No form data."
+      number_of_characters < 3 or number_of_characters > 240 ->
+        text conn, "Expected between 3 and 240 characters. Got #{number_of_characters}."
       String.printable?(input) ->
         # Inserts/updates story.
         case get_session(conn, :story_id) do
