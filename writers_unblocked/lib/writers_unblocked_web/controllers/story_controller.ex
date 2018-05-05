@@ -85,14 +85,7 @@ defmodule WritersUnblockedWeb.StoryController do
 
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
 
-    IO.puts IO.ANSI.green <> "-- BEGIN inspect params --" <> IO.ANSI.yellow
-    IO.inspect params
-    IO.puts IO.ANSI.green <> "-- END --"
-
-    #This shows how server can detect which button was pressed, pass on or finish.
-    #Not sure what to do with it as of yet, see issue.
-    sPassOrFinn = "You clicked: " <> if Map.has_key?(params, "pass"), do: "pass", else: "finish"
-    IO.puts sPassOrFinn
+    Logger.debug "Params: #{inspect(params)}"
 
     cond do
       byte_size(content) == 0 ->

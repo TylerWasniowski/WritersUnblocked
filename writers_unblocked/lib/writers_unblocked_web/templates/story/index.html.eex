@@ -8,7 +8,7 @@
   <div>  
   <textarea minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60"></textarea>
   </div>  
-  <input type="submit" value="Continue Story" name="pass" /> <!-- only one of these names will exist in the elixir params map -->
-  <input type="submit" value="Finish Story" name="finish" />
+  <input type="submit" value="Continue Story" name="continue-button" /> <!-- only one of these names will exist in the elixir params map -->
+  <input type="submit" value="Finish Story" name="finish-button" />
 </form>
 
