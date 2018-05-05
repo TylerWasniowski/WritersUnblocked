@@ -1,5 +1,7 @@
 html
 {
+    color: #333;
+    background: #FFF;
     font-family: "Segoe UI", sans-serif;
 }
 
@@ -7,6 +9,7 @@ html
 {
     min-width: 360px;
     width: 50%;
+    max-width: 640px;
     margin: auto;
     text-align: center;
 }
@@ -20,6 +23,8 @@ a#main-heading
 #navigation a,
 .story-form input[type=submit]
 {
+    border: solid 1px #BCE;
+    background-color: #DEF;
     text-decoration: none;
     color: inherit;
     margin: 0.25em;
@@ -28,29 +33,39 @@ a#main-heading
     font-size: inherit;
 }
 
-.story-form input[type=submit]
-{
-    float: right;
-}
-
-#navigation a
-{
-    border: solid 1px #BCE;
-    background-color: #DEF;
-}
-
 input[type=submit]
 {
     border: solid 1px #9BE;
     background-color: #ACF;
 }
 
+.current-story-title
+{
+    font-family: "Georgia", serif;
+    font-size: inherit;
+    width: 100%;
+    text-align: center;
+}
+
+input.current-story-title
+{
+    border: none !important;
+    background: transparent;
+}
+
 .current-story-text
 {
     text-align: justify;
     text-justify: inter-word;
-    padding: 0 1em;
     font-family: "Georgia", serif;
+}
+
+.story-form [type="text"],
+.story-form textarea
+{
+    border: 1px solid;
+    color: inherit;
+    background: inherit;
 }
 
 .story-form
@@ -58,7 +73,7 @@ input[type=submit]
     margin: 1em;
 }
 
-.story-form .input-text
+.story-form textarea
 {
     min-width: 100%;
     max-width: 100%;
