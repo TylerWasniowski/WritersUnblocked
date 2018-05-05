@@ -18,6 +18,7 @@ defmodule WritersUnblockedWeb.Router do
 
     get "/", HomeController, :index
     get "/story", StoryController, :index # Should this be post too? It modifies the story lock state.
+    get "/allstories", AllstoriesController, :index # Should this be post too? It modifies the story lock state.
 
     post "/update-story", StoryController, :submit_entry
   end
