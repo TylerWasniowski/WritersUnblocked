@@ -8,6 +8,8 @@
 # 	render conn, "index.html", title: story_title, body: story_text
 #	In eex:
 #		<%= @title %>
+# These can also appear in contexts that expect text in double quotes " ", example:
+# Update Title: <input type="text" name="title" value="<%= @title %>">
 
 defmodule WritersUnblockedWeb.StoryView do
   use WritersUnblockedWeb, :view

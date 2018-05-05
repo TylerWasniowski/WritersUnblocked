@@ -17,9 +17,9 @@ defmodule WritersUnblockedWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", HomeController, :index
-    get "/story", StoryController, :index
+    get "/story", StoryController, :index # Should this be post too? It modifies the story lock state.
 
-    get "/update-story", StoryController, :submit_entry
+    post "/update-story", StoryController, :submit_entry
   end
 
   # Other scopes may use custom stacks.

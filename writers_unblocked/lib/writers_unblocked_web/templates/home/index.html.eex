@@ -1,3 +1,9 @@
+<!--
+<div>
+  <%= case Map.fetch(assigns, :statmsg) do {:ok, msg} ->  "submission info" <> msg <> "\n\n"; _ -> "" end %>
+</div>
+-->
+
 <div class="center" id="navigation">
   <a class="button" href="/story?action=new">New Story</a>
   <a class="button" href="/story?action=continue">Continue Story</a>

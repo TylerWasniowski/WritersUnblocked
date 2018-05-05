@@ -1,16 +1,19 @@
-<p style="text-align:center;"><strong>Title: </strong><ins><%= @title %><ins></p>
+<p style="text-align:center;"><strong>Current Title: </strong><ins><%= @title %><ins></p>
 <p style="text-align:center;">The story so far...</p>
 <p>
-	<%= @body %>
+  <%= @body %>
 </p>
 
-<form class="story-form" action="update-story">
-    <input class="story-id" value="storyid" hidden="hidden" name="story-id"></input>
-    <!-- <label for="input-story-text">Input</label> -->
-    <!-- TODO: replace maxlength value with %max-input-length% or something to that accord -->
-    <textarea class="input-text" maxlength="240" placeholder="What happens next?" name="append-input"></textarea>
-    <span class="characters-remaining">Chars left:
-        <span class="characters-remaining-value">%characters-remaining%</span>
-    </span>
-    <input id="submit" class="button" type="submit" value="Submit"></input>
+<!-- this causes invalid CSRF: <form action="update-story" method="post"> -->
+<!-- If I change the thing to post I need something like this here, still don't get this whole session stuff or why its needed -->
+<%= form_tag("/update-story", method: :post) %>
+  <div>
+  Update Title: <input type="text" name="title" value="<%= @title %>" required pattern="[A-Za-z][A-Za-z' -]+" minlength="3" maxlength="120" size="40">
+  </div>
+  <div>  
+  <textarea minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60"></textarea>
+  </div>  
+  <input type="submit" value="append and pass" name="pass" /> <!-- only one of these names will exist in the elixir params map -->
+  <input type="submit" value="append and finish" name="finish" />
 </form>
+
