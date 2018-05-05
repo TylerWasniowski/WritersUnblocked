@@ -16,7 +16,7 @@ defmodule WritersUnblocked.Story do
         story
         |> cast(params, [:title, :body, :locked, :finished])
         |> validate_required([:title, :body])
-        |> validate_length(:title, min: 3)
+        |> validate_length(:title, min: 1)
         |> validate_length(:title, max: 42)
         |> validate_length(:body, min: 3)
     end
