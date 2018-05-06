@@ -1,5 +1,3 @@
-# XXX: appears story apend input is no longer appended to previous body, but overwrites it.
-
 import Ecto.Changeset
 
 defmodule WritersUnblockedWeb.StoryController do
