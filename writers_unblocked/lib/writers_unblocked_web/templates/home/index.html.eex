@@ -11,6 +11,6 @@
   </div>
   <br />
   <div>
-    <a class="button" href="/allstories">See All Stories</a>
+    <a class="button" href="/stories-viewer">See All Stories</a>
   </div>
 </div>

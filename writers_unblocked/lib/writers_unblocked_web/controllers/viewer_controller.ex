@@ -1,6 +1,6 @@
 import Ecto.Query, only: [from: 2]
 
-defmodule WritersUnblockedWeb.AllstoriesController do
+defmodule WritersUnblockedWeb.ViewerController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
   alias WritersUnblocked.Story
