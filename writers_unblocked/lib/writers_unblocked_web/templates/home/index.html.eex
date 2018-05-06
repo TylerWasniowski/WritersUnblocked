@@ -13,4 +13,10 @@
   <div>
     <a class="button" href="/stories-viewer">See All Stories</a>
   </div>
+  <div>
+  <form action="/single">
+  <br>
+    View story by id: <input type="number" pattern="\d+" name="story-id"/>
+  </form>
+  </div>
 </div>
