@@ -54,8 +54,7 @@ defmodule WritersUnblockedWeb.StoryController do
       nil -> render conn, "index.html", title: "New Story", body: ""
       # Continuing existing story? Get story from database.
       story_id ->
-        story = Story
-        |> Repo.get(story_id)
+        story = Repo.get(Story, story_id)
         render conn, "index.html", title: story.title, body: story.body
     end
   end
