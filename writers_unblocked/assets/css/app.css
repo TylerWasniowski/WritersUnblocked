@@ -93,3 +93,11 @@ input.current-story-title
 {
     text-align: left;
 }
+
+.vote-icon
+{
+    width: 45px;
+    height: 75px;
+    float: left;
+    margin-right: 15px;
+}
