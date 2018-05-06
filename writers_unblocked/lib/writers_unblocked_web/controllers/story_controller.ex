@@ -119,6 +119,13 @@ defmodule WritersUnblockedWeb.StoryController do
                 title -> merge(changeset, Story.changeset(story_item, %{title: title}))
               end
 
+            # Finished button clicked? Set finished to true.
+            changeset =
+              case Map.fetch(params, "finish-button") do
+                nil -> changeset
+                _ -> merge(changeset, Story.changeset(story_item, %{finished: true}))
+              end
+
             Repo.update(changeset)
         end
 

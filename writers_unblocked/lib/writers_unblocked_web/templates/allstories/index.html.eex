@@ -5,8 +5,8 @@
 -->
 
 <div class="center">
-	<%= for {story, n} <- Enum.with_index(@allstorieslist) do %>
-		<h3>Story #<%= n + 1 %>: <%= List.first(story) %></h3>
-		<%= text_to_html List.last(story) %>
-  	<% end %>
+	<%= for story <- @stories do %>
+		<h2><%= story.title %></h2>
+		<%= text_to_html story.body %>
+	<% end %>
 </div>
