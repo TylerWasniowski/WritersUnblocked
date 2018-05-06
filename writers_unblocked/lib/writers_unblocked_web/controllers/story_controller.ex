@@ -20,7 +20,7 @@ defmodule WritersUnblockedWeb.StoryController do
                 |> SQL.query!("""
                     SELECT id
                     FROM stories
-                    WHERE NOT locked = 'true' AND NOT finished = 'true'
+                    WHERE NOT locked AND NOT finished
                     ORDER BY RANDOM() LIMIT 1
                     """, [])
                 |> Map.fetch(:rows)
