@@ -20,7 +20,8 @@ defmodule WritersUnblockedWeb.StoryController do
                 |> SQL.query!("""
                     SELECT id
                     FROM stories
-                    WHERE locked IS NULL OR locked = 'false' ORDER BY RANDOM() LIMIT 1
+                    WHERE NOT locked = 'true' AND NOT finished = 'true'
+                    ORDER BY RANDOM() LIMIT 1
                     """, [])
                 |> Map.fetch(:rows)
                 |> elem(1)
@@ -97,7 +98,7 @@ defmodule WritersUnblockedWeb.StoryController do
             # Finished button clicked? Set finished to true.
             changeset =
               case Map.fetch(params, "finish-button") do
-                nil -> changeset
+                :error -> changeset
                 _ -> merge(changeset, Story.changeset(story_item, %{finished: true}))
               end
 
