@@ -7,28 +7,6 @@ defmodule WritersUnblockedWeb.StoryController do
   alias Ecto.Adapters.SQL
   require Logger
 
-  #you know what... sometimes when people capitalize
-  #things can be amusing.
-  #but I felt like writing an elixir function
-  #maybe something modified, just stripping only
-
-  @nocapset MapSet.new(["a", "an", "the", "of", "and", "on", "or", "to", "by"])
-
-  def make_proper_title(instr) do
-    case String.split(instr, " ", trim: true) do
-      [] ->
-        ""
-      [head|rest] ->
-        head = String.capitalize(head)
-        if Enum.empty?(rest) do
-          head
-        else
-          head <> " " <> (
-          Enum.map(rest, fn(s) ->  if MapSet.member?(@nocapset, s), do: s, else: String.capitalize(s) end) |> Enum.join(" ") )
-        end
-      end
-  end
-
   def index(conn, %{"action" => action}) do
     conn =
       case get_session(conn, :story_id) do
@@ -81,10 +59,7 @@ defmodule WritersUnblockedWeb.StoryController do
     end
   end
 
-  #no "return early" in elixir... could really use helper funcctions to cut down on the indent
-
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
-
     Logger.debug "Params: #{inspect(params)}"
 
     cond do
@@ -97,7 +72,7 @@ defmodule WritersUnblockedWeb.StoryController do
         case get_session(conn, :story_id) do
           # No story selected? Create new story.
           nil ->
-            case title do
+            case capitalize_title(title) do
               "" -> Repo.insert(%Story{title: "Untitled Story", body: content})
               title -> Repo.insert(%Story{title: title, body: content})
             end
@@ -114,7 +89,7 @@ defmodule WritersUnblockedWeb.StoryController do
 
             # New title submitted? Update title.
             changeset =
-              case title do
+              case capitalize_title(title) do
                 "" -> changeset
                 title -> merge(changeset, Story.changeset(story_item, %{title: title}))
               end
@@ -137,5 +112,22 @@ defmodule WritersUnblockedWeb.StoryController do
       true ->
         text conn, "Data contains non-printable chars."
     end
+  end
+
+  # Automatically capitalize title (made by Jon)
+  @nocapset MapSet.new(["a", "an", "the", "of", "and", "on", "or", "to", "by"])
+  def capitalize_title(instr) do
+    case String.split(instr, " ", trim: true) do
+      [] ->
+        ""
+      [head|rest] ->
+        head = String.capitalize(head)
+        if Enum.empty?(rest) do
+          head
+        else
+          head <> " " <> (
+          Enum.map(rest, fn(s) ->  if MapSet.member?(@nocapset, s), do: s, else: String.capitalize(s) end) |> Enum.join(" ") )
+        end
+      end
   end
 end
