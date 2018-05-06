@@ -88,3 +88,8 @@ input.current-story-title
 {
     float: left;
 }
+
+.left-align
+{
+    text-align: left;
+}

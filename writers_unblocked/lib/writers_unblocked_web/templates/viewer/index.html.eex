@@ -1,12 +1,6 @@
-<!--
-<div>
-  <%= case Map.fetch(assigns, :statmsg) do {:ok, msg} ->  "submission info" <> msg <> "\n\n"; _ -> "" end %>
-</div>
--->
-
-<div class="center">
-	<%= for story <- @stories do %>
-		<h2><%= story.title %></h2>
+<%= for story <- @stories do %>
+	<h2><%= story.title %></h2>
+	<div class="left-align">
 		<%= text_to_html story.body %>
-	<% end %>
-</div>
+	</div>
+<% end %>
