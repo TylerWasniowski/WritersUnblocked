@@ -23,23 +23,14 @@ a#main-heading
 #navigation a,
 .story-form input[type=submit]
 {
+    border: solid 1px #BCE;
+    background-color: #DEF;
     text-decoration: none;
     color: inherit;
     margin: 0.25em;
     padding: 0.25em 0.5em;
     border-radius: 0.25em;
     font-size: inherit;
-}
-
-.story-form input[type=submit]
-{
-    float: right;
-}
-
-#navigation a
-{
-    border: solid 1px #BCE;
-    background-color: #DEF;
 }
 
 input[type=submit]

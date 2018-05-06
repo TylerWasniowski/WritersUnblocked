@@ -2,13 +2,13 @@
 <!-- If I change the thing to post I need something like this here, still don't get this whole session stuff or why its needed -->
 <%= form_tag("/update-story", method: :post, class: "story-form") %>
 <h2> <input class="current-story-title" type="text" name="title" placeholder="<%= @title %>" minlength="3" maxlength="120" size="40"> </h2>
-<p class="current-story-text">
-  <%= @body %>
-</p>
+<div class="current-story-text">
+  <%= text_to_html @body %>
+</div>
   <div>  
   <textarea minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60"></textarea>
   </div>  
-  <input type="submit" value="append and pass" name="pass" /> <!-- only one of these names will exist in the elixir params map -->
-  <input type="submit" value="append and finish" name="finish" />
+  <input type="submit" value="Append to Story" />
+  <input type="submit" value="Finish Story" name="finish-button" />
 </form>
 

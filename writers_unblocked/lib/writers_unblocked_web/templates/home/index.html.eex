@@ -5,6 +5,12 @@
 -->
 
 <div class="center" id="navigation">
-  <a class="button" href="/story?action=new">New Story</a>
-  <a class="button" href="/story?action=continue">Continue Story</a>
+  <div>
+    <a class="button" href="/story?action=new">New Story</a>
+    <a class="button" href="/story?action=continue">Continue Story</a>
+  </div>
+  <br />
+  <div>
+    <a class="button" href="/stories-viewer">See All Stories</a>
+  </div>
 </div>
