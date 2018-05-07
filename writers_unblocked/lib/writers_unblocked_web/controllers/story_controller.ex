@@ -74,11 +74,7 @@ defmodule WritersUnblockedWeb.StoryController do
             story_item =
               Story
               |> Repo.get(get_session(conn, :story_id))
-            
-              IO.puts IO.ANSI.green <> "-- story body... --" <> IO.ANSI.yellow
-              IO.inspect story_item.body
-              IO.puts IO.ANSI.green <> "-- ... --" 
-
+              
             changeset =
               Story.changeset(story_item,
               %{body: "#{story_item.body}\n#{content}", locked: false})
