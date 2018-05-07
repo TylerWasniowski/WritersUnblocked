@@ -12,7 +12,7 @@
     Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
   </div> 
   <%= if @create do %>
-  	<input type="submit" value="Create New Story" />
+  	<input type="submit" value="Create Story" />
   <% else %>
   	<input type="submit" value="Append to Story" />
   <% end %>
