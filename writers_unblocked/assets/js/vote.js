@@ -9,11 +9,6 @@ export var Vote = {
                 .forEach(
                     (storyDiv) =>
                     {
-                        const storiesDiv = document.querySelector('#stories')
-                        // Don't enable click listeners if already voted
-                        if (storiesDiv.classList.contains('voted'))
-                            return;
-
                         const voteDiv = storyDiv.querySelector('.vote-icon')
                         if (!voteDiv)
                             return;
@@ -22,7 +17,12 @@ export var Vote = {
                         let data = new FormData()
                         data.append('id', storyId)
 
+                        const storiesDiv = document.querySelector('#stories')
                         voteDiv.addEventListener('click', (event) => {
+                            // Don't do anything if user already voted
+                            if (storiesDiv.classList.contains('voted'))
+                                return;
+                                
                             fetch('/vote', {
                                 method: 'post',
                                 credentials: 'same-origin',
