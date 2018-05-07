@@ -28,7 +28,7 @@ defmodule WritersUnblockedWeb.StoryController do
               ) do
                 # No available stories? Don't assign story.
                 [] -> conn
-                # There is an available story.
+                # There is an available story, assign it.
                 [story_query | _] ->
                   story_id = List.first(story_query)
                   # Locks story
@@ -43,8 +43,8 @@ defmodule WritersUnblockedWeb.StoryController do
             # New story? Don't assign story.
             _ -> conn
           end
-          # Story already assigned.
-          _ -> conn
+        # Story already assigned.
+        _ -> conn
       end
 
     Logger.debug "Story id: #{get_session(conn, :story_id)}"
@@ -112,6 +112,11 @@ defmodule WritersUnblockedWeb.StoryController do
       true ->
         text conn, "Data contains non-printable chars."
     end
+  end
+
+  def vote(conn, %{"id" => id}) do
+    Logger.debug "ID: #{id}"
+    text(conn, inspect(id))
   end
 
   # Automatically capitalize title (made by Jon)

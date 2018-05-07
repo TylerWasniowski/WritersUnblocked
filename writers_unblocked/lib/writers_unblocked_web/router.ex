@@ -20,6 +20,7 @@ defmodule WritersUnblockedWeb.Router do
     get "/story", StoryController, :index
     get "/stories-viewer", ViewerController, :index
 
+    post "/vote", StoryController, :vote
     post "/update-story", StoryController, :submit_entry
   end
 

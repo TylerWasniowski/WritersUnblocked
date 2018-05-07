@@ -5,6 +5,13 @@
 
     <title>WritersUnblocked</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    
+    <script type="text/javascript">
+      // Put CSRF token in a variable so scripts can access it for post requests
+      var CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+    </script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script>require("js/app").App.run()</script>
   </head>
 
   <body>

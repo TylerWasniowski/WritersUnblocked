@@ -35,6 +35,7 @@ defmodule WritersUnblockedWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "session_data",
+    max_age: 86400, # Expires after a day
     signing_salt: "7kLV3F82"
 
   plug WritersUnblockedWeb.Router

@@ -96,8 +96,16 @@ input.current-story-title
 
 .vote-icon
 {
+    display: inline-block;
     width: 45px;
     height: 75px;
-    float: left;
     margin-right: 15px;
+    cursor: pointer;
+}
+
+.body
+{
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
 }
