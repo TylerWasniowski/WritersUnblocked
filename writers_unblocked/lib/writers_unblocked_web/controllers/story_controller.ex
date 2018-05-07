@@ -8,7 +8,7 @@ defmodule WritersUnblockedWeb.StoryController do
   require Logger
 
   def give_new_story(conn) do
-    render conn, "index.html", title: "Untitled Story", body: ""
+    render conn, "index.html", title: "Untitled Story", body: "", finish: false
   end
 
   def give_continue_story(conn) do
@@ -39,7 +39,13 @@ defmodule WritersUnblockedWeb.StoryController do
 
       story = Repo.get(Story, story_id)
       conn = put_session(conn, :story_id, story_id)
-      render conn, "index.html", title: story.title, body: story.body
+
+      cond do
+        byte_size(story.body) < 920 ->
+          render conn, "index.html", title: story.title, body: story.body, finish: false
+        byte_size(story.body) >= 920 ->
+          render conn, "index.html", title: story.title, body: story.body, finish: true
+      end
     end
   end
 

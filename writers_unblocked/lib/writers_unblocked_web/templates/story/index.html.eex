@@ -12,7 +12,9 @@
     Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
   </div>  
   <input type="submit" value="Append to Story" />
-  <input type="submit" value="Finish Story" name="finish-button" />
+  <%= if @finish do %>
+  	<input type="submit" value="Finish Story" name="finish-button" />
+  <% end %>
 </form>
 
 <script>
