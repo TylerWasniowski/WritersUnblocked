@@ -3,7 +3,7 @@ defmodule WritersUnblocked.Repo.Migrations.LockedNotNullable do
 
   def change do
     alter table(:stories) do
-      modify :locked, :boolean, default: "false", null: false
+      modify :locked, :boolean, null: false, default: false
     end
   end
 end
