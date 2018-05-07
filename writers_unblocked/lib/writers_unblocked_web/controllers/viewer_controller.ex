@@ -13,6 +13,7 @@ defmodule WritersUnblockedWeb.ViewerController do
       where: story.finished,
       select: story
 
-    render conn, "index.html", stories: Repo.all(query)
+    Logger.debug "vote_id: #{get_session(conn, :vote_id)}"
+    render conn, "index.html", stories: Repo.all(query), vote_id: get_session(conn, :vote_id)
   end
 end
