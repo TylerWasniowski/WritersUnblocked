@@ -9,6 +9,11 @@ export var Vote = {
                 .forEach(
                     (storyDiv) =>
                     {
+                        const storiesDiv = document.querySelector('#stories')
+                        // Don't enable click listeners if already voted
+                        if (storiesDiv.classList.contains('voted'))
+                            return;
+
                         const voteDiv = storyDiv.querySelector('.vote-icon')
                         if (!voteDiv)
                             return;
@@ -30,13 +35,7 @@ export var Vote = {
                                 voteDiv.classList.remove('vote-icon')
                                 voteDiv.classList.add('voted-icon')
                                 
-                                const voteDivs = document.querySelectorAll('.vote-icon')
-                                voteDivs.forEach(
-                                    (element) => {
-                                        // Removes event handlers from other voting divs
-                                        element.outerHTML = element.outerHTML
-                                    }
-                                )
+                                storiesDiv.classList.add('voted')
                             })
                         })
                     }

@@ -94,6 +94,12 @@ input.current-story-title
     text-align: left;
 }
 
+.story-link
+{
+    text-decoration: none;
+    color: black;
+}
+
 .vote-icon,
 .voted-icon
 {

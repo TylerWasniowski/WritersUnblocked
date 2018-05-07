@@ -22,7 +22,7 @@ import "phoenix_html"
 import { Vote } from "./vote"
 
 export var App = {
-    run: function(){
+    run: () => {
       Vote.armVoting()
     }
 }
