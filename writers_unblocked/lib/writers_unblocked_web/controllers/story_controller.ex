@@ -76,19 +76,19 @@ defmodule WritersUnblockedWeb.StoryController do
 
           # Story selected? Append to old story.
           _ ->
-            story_item =
+            story =
               Story
               |> Repo.get(get_session(conn, :story_id))
 
             changeset =
-              Story.changeset(story_item,
-              %{body: "#{story_item.body}\n#{content}", locked: false})
+              Story.changeset(story,
+              %{body: "#{story.body}\n#{content}", locked: false})
 
             # New title submitted? Update title.
             changeset =
               case capitalize_title(title) do
                 "" -> changeset
-                title -> merge(changeset, Story.changeset(story_item, %{title: title}))
+                title -> merge(changeset, Story.changeset(story, %{title: title}))
               end
 
             # Finished button clicked and content length is large enough? Set finished to true.
@@ -97,8 +97,8 @@ defmodule WritersUnblockedWeb.StoryController do
                 :error -> changeset
                 _ ->
                   cond do
-                    String.length(content) < 920 -> changeset
-                    true -> merge(changeset, Story.changeset(story_item, %{finished: true}))
+                    String.length(story.body) < 920 -> changeset
+                    true -> merge(changeset, Story.changeset(story, %{finished: true}))
                   end
               end
 
