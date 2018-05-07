@@ -91,11 +91,15 @@ defmodule WritersUnblockedWeb.StoryController do
                 title -> merge(changeset, Story.changeset(story_item, %{title: title}))
               end
 
-            # Finished button clicked? Set finished to true.
+            # Finished button clicked and content length is large enough? Set finished to true.
             changeset =
               case Map.fetch(params, "finish-button") do
                 :error -> changeset
-                _ -> merge(changeset, Story.changeset(story_item, %{finished: true}))
+                _ ->
+                  cond do
+                    String.length(content) < 920 -> changeset
+                    true -> merge(changeset, Story.changeset(story_item, %{finished: true}))
+                  end
               end
 
             Repo.update(changeset)
