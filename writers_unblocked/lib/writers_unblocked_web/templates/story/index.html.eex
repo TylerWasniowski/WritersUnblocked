@@ -10,8 +10,13 @@
       minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
       onkeyup="textCounter(this,'counter',240);" id="message"></textarea>
     Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
-  </div>  
-  <input type="submit" value="Append to Story" />
+  </div> 
+  <%= if @create do %>
+  	<input type="submit" value="Create New Story" />
+  <% else %>
+  	<input type="submit" value="Append to Story" />
+  <% end %>
+  
   <%= if @finish do %>
   	<input type="submit" value="Finish Story" name="finish-button" />
   <% end %>
