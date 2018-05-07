@@ -1,7 +1,6 @@
 defmodule WritersUnblockedWeb.SingleController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
-  # alias WritersUnblocked.Story
   alias Ecto.Adapters.SQL
   require Logger
 
@@ -19,12 +18,16 @@ defmodule WritersUnblockedWeb.SingleController do
                 |> elem(1)
       case qres do
       [] ->
-        text conn, "no story with id found"
-      [[title, body]] ->
-        text conn, "title: " <> title <> ",\nbody: " <> body
+        conn
+        |> put_flash(:info, "No story with id #{id} found.")
+        |> redirect(to: "/")
+      [[qtitle, qbody]] ->
+        render conn, "index.html", title: qtitle, body: qbody
       _ ->
         IO.inspect qres
-        text conn, "error"
+        conn
+        |> put_flash(:error, "Server internal error.")
+        |> redirect(to: "/")
       end
     #end
   end

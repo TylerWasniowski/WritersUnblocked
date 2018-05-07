@@ -7,7 +7,7 @@ defmodule WritersUnblockedWeb.StoryController do
   alias Ecto.Adapters.SQL
   require Logger
   
-  
+  # Its declarative and called more than once :)
   def give_new_story(conn) do
     render conn, "index.html", title: "Untitled", body: ""
   end
@@ -37,43 +37,22 @@ defmodule WritersUnblockedWeb.StoryController do
       |> Story.changeset(%{locked: true})
       |> Repo.update()
 
-      # lots of queries but idk how to do it otherwise now
-      story = Story
-      |> Repo.get(story_id)
+      story = Repo.get(Story, story_id)
       conn = put_session(conn, :story_id, story_id)
       render conn, "index.html", title: story.title, body: story.body
     end
-  end
+  end # give_continue_story(conn)
 
 
   def index(conn, %{"action" => action}) do
-
-    IO.puts IO.ANSI.green <> "-- BEGIN conn inspect StoryController.index() --" <> IO.ANSI.yellow
-    IO.inspect conn
-    IO.puts IO.ANSI.green <> "-- END --" 
-
-    #this probably needs to be down in other places to,
-    #like the user hits their back button when editing a story?
-    #idk if can have some callback,
-    #but here is enough for the purposes of this assignment
-
-    get_id_ret = get_session(conn, :story_id)
-    IO.puts "inspect story_id in session before delete: #{get_id_ret}"
-    conn = delete_session(conn, :story_id)
-    
-    if get_id_ret!=nil do
-      IO.inspect(Repo |> SQL.query!("UPDATE stories SET locked=FALSE WHERE id=#{get_id_ret}"))
-    end
-    
     case action do
     "new" -> give_new_story(conn)
     _     -> give_continue_story(conn)
     end
-
   end
 
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
-    Logger.debug "Params: #{inspect(params)}"
+    Logger.debug "Params of submit_entry:  #{inspect(params)}"
 
     cond do
       byte_size(content) == 0 ->
@@ -204,9 +183,3 @@ end
 
 end
 
-
-    #qres = Repo |> SQL.query!("""
-    #     SELECT id, title, body FROM stories
-    #     WHERE NOT locked AND NOT finished
-    #     ORDER BY RANDOM() LIMIT 1
-    #     """) |> Map.fetch(:rows) |> elem(1)

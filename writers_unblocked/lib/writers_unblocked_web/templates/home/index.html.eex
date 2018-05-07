@@ -1,9 +1,3 @@
-<!--
-<div>
-  <%= case Map.fetch(assigns, :statmsg) do {:ok, msg} ->  "submission info" <> msg <> "\n\n"; _ -> "" end %>
-</div>
--->
-
 <div class="center" id="navigation">
   <div>
     <a class="button" href="/story?action=new">New Story</a>
@@ -16,7 +10,7 @@
   <div>
   <form action="/single">
   <br>
-    View story by id: <input type="number" pattern="\d+" name="story-id"/>
+    View story by id: <input type="text" pattern="\d+" name="story-id"/>
   </form>
   </div>
 </div>
