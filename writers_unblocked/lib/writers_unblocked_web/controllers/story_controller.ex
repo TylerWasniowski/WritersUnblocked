@@ -8,7 +8,7 @@ defmodule WritersUnblockedWeb.StoryController do
   require Logger
 
   def give_new_story(conn) do
-    render conn, "index.html", title: "Untitled Story", body: "", finish: false
+    render conn, "index.html", title: "Untitled Story", body: "", create: true, finish: false
   end
 
   def give_continue_story(conn) do
@@ -42,9 +42,9 @@ defmodule WritersUnblockedWeb.StoryController do
 
       cond do
         byte_size(story.body) < 920 ->
-          render conn, "index.html", title: story.title, body: story.body, finish: false
+          render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
         byte_size(story.body) >= 920 ->
-          render conn, "index.html", title: story.title, body: story.body, finish: true
+          render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
       end
     end
   end
