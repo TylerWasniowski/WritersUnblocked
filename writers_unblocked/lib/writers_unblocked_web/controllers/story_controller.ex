@@ -7,17 +7,13 @@ defmodule WritersUnblockedWeb.StoryController do
   alias Ecto.Adapters.SQL
   require Logger
 
-  def index(conn, %{"action" => action}) do
-    conn =
-      case get_session(conn, :story_id) do
-        nil ->
-          case action do
-            # Continuing story? Assign story if available.
-            "continue" ->
-              case (
-                # Select random story id from database.
-                Repo
-                |> SQL.query!("""
+  # Its declarative and called more than once :)
+  def give_new_story(conn) do
+    render conn, "index.html", title: "Untitled", body: ""
+  end
+
+  def give_continue_story(conn) do
+    case (Repo |> SQL.query!("""
                     SELECT id
                     FROM stories
                     WHERE NOT locked AND NOT finished
@@ -25,42 +21,39 @@ defmodule WritersUnblockedWeb.StoryController do
                     """, [])
                 |> Map.fetch(:rows)
                 |> elem(1)
-              ) do
-                # No available stories? Don't assign story.
-                [] -> conn
-                # There is an available story, assign it.
-                [story_query | _] ->
-                  story_id = List.first(story_query)
-                  # Locks story
-                  Story
-                  |> Repo.get(story_id)
-                  |> Story.changeset(%{locked: true})
-                  |> Repo.update()
+    ) do
+    # No available story
+    [] ->
+      conn
+      |> put_flash(:info, "No stories available to continue, you can make a new one here.")
+      |> give_new_story # and return
 
-                  put_session(conn, :story_id, story_id)
-              end
+    # There is an available story.
+    [story_query | _] ->
+      story_id = List.first(story_query)
+      # Locks story
+      Story
+      |> Repo.get(story_id)
+      |> Story.changeset(%{locked: true})
+      |> Repo.update()
 
-            # New story? Don't assign story.
-            _ -> conn
-          end
-        # Story already assigned.
-        _ -> conn
-      end
 
-    Logger.debug "Story id: #{get_session(conn, :story_id)}"
+      story = Repo.get(Story, story_id)
+      conn = put_session(conn, :story_id, story_id)
+      render conn, "index.html", title: story.title, body: story.body
+    end
+  end # give_continue_story(conn)
 
-    case get_session(conn, :story_id) do
-      # New story? Previous story empty.
-      nil -> render conn, "index.html", title: "New Story", body: ""
-      # Continuing existing story? Get story from database.
-      story_id ->
-        story = Repo.get(Story, story_id)
-        render conn, "index.html", title: story.title, body: story.body
+
+  def index(conn, %{"action" => action}) do
+    case action do
+    "new" -> give_new_story(conn)
+    _     -> give_continue_story(conn)
     end
   end
 
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
-    Logger.debug "Params: #{inspect(params)}"
+    Logger.debug "Params of submit_entry:  #{inspect(params)}"
 
     cond do
       byte_size(content) == 0 ->
@@ -112,7 +105,7 @@ defmodule WritersUnblockedWeb.StoryController do
       true ->
         text conn, "Data contains non-printable chars."
     end
-  end
+end
 
   def vote(conn, %{"id" => id}) do
     Logger.debug "ID: #{id}"
@@ -135,4 +128,60 @@ defmodule WritersUnblockedWeb.StoryController do
         end
       end
   end
+
+
+  def old_index(conn, %{"action" => action}) do
+    conn =
+      case get_session(conn, :story_id) do
+        nil ->
+          case action do
+            # Continuing story? Assign story if available.
+            "continue" ->
+              case (
+                # Select random story id from database.
+                Repo
+                |> SQL.query!("""
+                    SELECT id
+                    FROM stories
+                    WHERE NOT locked AND NOT finished
+                    ORDER BY RANDOM() LIMIT 1
+                    """, [])
+                |> Map.fetch(:rows)
+                |> elem(1)
+              ) do
+                # No available stories? Don't assign story.
+                [] -> conn
+                # There is an available story.
+                [story_query | _] ->
+                  story_id = List.first(story_query)
+                  # Locks story
+                  Story
+                  |> Repo.get(story_id)
+                  |> Story.changeset(%{locked: true})
+                  |> Repo.update()
+
+                  put_session(conn, :story_id, story_id)
+              end
+
+            # New story? Don't assign story.
+            _ -> conn
+          end
+          # Story already assigned.
+          _ -> conn
+      end
+
+    Logger.debug "Story id: #{get_session(conn, :story_id)}"
+
+    case get_session(conn, :story_id) do
+      # New story? Previous story empty.
+      nil -> render conn, "index.html", title: "New Story", body: ""
+      # Continuing existing story? Get story from database.
+      story_id ->
+        story = Story
+        |> Repo.get(story_id)
+        render conn, "index.html", title: story.title, body: story.body
+    end
+  end
+
 end
+
