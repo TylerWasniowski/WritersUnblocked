@@ -8,7 +8,7 @@ defmodule WritersUnblockedWeb.StoryController do
   require Logger
 
   def give_new_story(conn) do
-    render conn, "index.html", title: "Untitled", body: ""
+    render conn, "index.html", title: "Untitled Story", body: ""
   end
 
   def give_continue_story(conn) do

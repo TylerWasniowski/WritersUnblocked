@@ -1,17 +1,15 @@
-<h2><%= @title %></h2>
 <!-- this causes invalid CSRF: <form action="update-story" method="post"> -->
 <!-- If I change the thing to post I need something like this here, still don't get this whole session stuff or why its needed -->
 <%= form_tag("/update-story", method: :post, class: "story-form") %>
-<input type="text" name="title" placeholder="<%= @title %>" minlength="3" maxlength="120" size="40">
+<h2> <input class="current-story-title" type="text" name="title" placeholder="<%= @title %>" minlength="3" maxlength="120" size="40"> </h2>
 <div class="current-story-text">
   <%= text_to_html @body %>
 </div>
   <div>
-  <textarea
-    minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
-    onkeyup="textCounter(this,'counter',240);" id="message">
-  </textarea>
-  Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
+    <textarea
+      minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
+      onkeyup="textCounter(this,'counter',240);" id="message"></textarea>
+    Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
   </div>  
   <input type="submit" value="Append to Story" />
   <input type="submit" value="Finish Story" name="finish-button" />
