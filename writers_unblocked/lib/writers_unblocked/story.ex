@@ -10,6 +10,7 @@ defmodule WritersUnblocked.Story do
         field :body, :string
         field :locked, :boolean
         field :finished, :boolean
+        field :votes, :integer
     end
 
     def changeset(story, params \\ %{}) do
