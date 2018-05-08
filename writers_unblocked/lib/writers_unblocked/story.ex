@@ -9,13 +9,14 @@ defmodule WritersUnblocked.Story do
         field :title, :string
         field :body, :string
         field :locked, :boolean
+        field :locked_until, :naive_datetime
         field :finished, :boolean
         field :votes, :integer
     end
 
     def changeset(story, params \\ %{}) do
         story
-        |> cast(params, [:title, :body, :locked, :finished, :votes])
+        |> cast(params, [:title, :body, :locked, :locked_until, :finished, :votes])
         |> validate_required([:title, :body])
         |> validate_length(:title, min: 1)
         |> validate_length(:title, max: 42)

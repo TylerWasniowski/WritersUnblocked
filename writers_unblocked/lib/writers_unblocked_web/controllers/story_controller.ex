@@ -5,14 +5,18 @@ defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
   alias WritersUnblocked.Story
-  alias Ecto.Adapters.SQL
   require Logger
 
   def give_new_story(conn) do
     case get_session(conn, :story_id) do
       nil -> render conn, "index.html", title: "Untitled Story", body: "", create: true, finish: false
       # Story was already assigned.
-      _ -> give_continue_story(conn)
+      _ ->
+        conn
+        |> put_flash(:info,
+        "You're already assigned to this story.
+        Please contribute before making a new one.")
+        |> give_continue_story()
     end
   end
 
@@ -20,9 +24,11 @@ defmodule WritersUnblockedWeb.StoryController do
     conn =
       case get_session(conn, :story_id) do
         nil ->
+          now_time = NaiveDateTime.to_string(NaiveDateTime.utc_now())
+
           case (Repo.one(
             from story in Story,
-              where: not story.locked,
+              where: story.locked_until <= ^NaiveDateTime.to_string(NaiveDateTime.utc_now()),
               where: not story.finished,
               order_by: [asc: fragment("RANDOM()")],
               limit: 1,
@@ -33,21 +39,18 @@ defmodule WritersUnblockedWeb.StoryController do
           # There is an available story.
           story ->
             # Locks story
+            waittime = Application.get_env(:writers_unblocked, Wait_Time)[:seconds_to_wait]
+
+            unlocktime = NaiveDateTime.utc_now()
+              |> NaiveDateTime.add(waittime)
+
             Story
             |> Repo.get(story.id)
-            |> Story.changeset(%{locked: true})
+            |> Story.changeset(%{locked_until: unlocktime})
             |> Repo.update()
 
             story = Repo.get(Story, story.id)
-            conn = put_session(conn, :story_id, story.id)
-
-            finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
-            cond do
-              byte_size(story.body) < finish_length ->
-                render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
-              true ->
-                render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
-            end
+            put_session(conn, :story_id, story.id)
           end
 
         # Story is already assigned
@@ -62,9 +65,9 @@ defmodule WritersUnblockedWeb.StoryController do
       id ->
         story = Repo.get(Story, id)
 
-        finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+        finish_length = Application.get_env(:writers_unblocked, Story_Config)[:finish_length]
         cond do
-          byte_size(story.body) < finish_length ->
+          String.length(story.body) < finish_length ->
             render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
           true ->
             render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
@@ -82,7 +85,7 @@ defmodule WritersUnblockedWeb.StoryController do
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
     Logger.debug "Params of submit_entry:  #{inspect params}"
 
-    max_chars = Application.get_env(:writers_unblocked, Story)[:entry_length]
+    max_chars = Application.get_env(:writers_unblocked, Story_Config)[:entry_length]
     cond do
       byte_size(content) == 0 ->
         text conn, "No form data."
@@ -104,9 +107,11 @@ defmodule WritersUnblockedWeb.StoryController do
               Story
               |> Repo.get(get_session(conn, :story_id))
 
+            currenttime = NaiveDateTime.utc_now()  
+
             changeset =
               Story.changeset(story,
-              %{body: "#{story.body}\n#{content}", locked: false})
+              %{body: "#{story.body}\n#{content}", locked_until: currenttime})
 
             # New title submitted? Update title.
             changeset =
@@ -120,7 +125,7 @@ defmodule WritersUnblockedWeb.StoryController do
               case Map.fetch(params, "finish-button") do
                 :error -> changeset
                 _ ->
-                  finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+                  finish_length = Application.get_env(:writers_unblocked, Story_Config)[:finish_length]
                   cond do
                     String.length(story.body) < finish_length -> changeset
                     true -> merge(changeset, Story.changeset(story, %{finished: true}))

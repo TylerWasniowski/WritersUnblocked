@@ -22,17 +22,23 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
-config :writers_unblocked, Story,
+config :writers_unblocked, Story_Config,
   entry_length: 600,
   # Amount of characters required before a story can be finished.
-  finish_length: 2500
+  finish_length: 2500,
+  lock_lifespan: 3600
 
 config :writers_unblocked, Viewer,
   # Number of random stories to display every time the viewer is entered
   number_of_stories: 10
 
+
 config :writers_unblocked, Vote,
   votes_per_user: 3
+
+config :writers_unblocked, Wait_Time,
+  # Number of seconds to wait until post is unlocked, will default to an hour, AKA 3600 secs
+  seconds_to_wait: 15
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
