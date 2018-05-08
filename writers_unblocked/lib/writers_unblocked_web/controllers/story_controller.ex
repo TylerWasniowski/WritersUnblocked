@@ -24,18 +24,20 @@ defmodule WritersUnblockedWeb.StoryController do
     conn =
       case get_session(conn, :story_id) do
         nil ->
-          case (Repo.one(
-            from story in Story,
-              where: story.locked_until <= ^NaiveDateTime.to_string(NaiveDateTime.utc_now()),
-              where: not story.finished,
-              order_by: [asc: fragment("RANDOM()")],
-              limit: 1,
-              select: story
-          )) do
+          story =
+            Repo.one(
+              from story in Story,
+                where: story.locked_until <= ^NaiveDateTime.to_string(NaiveDateTime.utc_now()),
+                where: not story.finished,
+                order_by: [asc: fragment("RANDOM()")],
+                limit: 1,
+                select: story
+            )
+          cond do
           # No available story
-          nil -> conn
+          story == nil -> conn
           # There is an available story.
-          story ->
+          true ->
             # Locks story
             lock_lifespan = Application.get_env(:writers_unblocked, Story_Config)[:lock_lifespan]
 
@@ -53,7 +55,22 @@ defmodule WritersUnblockedWeb.StoryController do
           end
 
         # Story is already assigned
-        _ -> conn
+        id ->
+          story =
+            Repo.one(
+              from story in Story,
+                where: story.id == ^id,
+                where: story.locked_until > ^NaiveDateTime.to_string(NaiveDateTime.utc_now()),
+                limit: 1,
+                select: story
+            )
+
+          cond do
+            # Assigned story was expired.
+            story == nil -> delete_session(conn, :story_id)
+            # Assigned story was not expired.
+            true -> conn
+          end
       end
 
     case get_session(conn, :story_id) do
