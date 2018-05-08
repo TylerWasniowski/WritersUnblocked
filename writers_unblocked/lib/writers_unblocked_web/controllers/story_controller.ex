@@ -24,8 +24,6 @@ defmodule WritersUnblockedWeb.StoryController do
     conn =
       case get_session(conn, :story_id) do
         nil ->
-          now_time = NaiveDateTime.to_string(NaiveDateTime.utc_now())
-
           case (Repo.one(
             from story in Story,
               where: story.locked_until <= ^NaiveDateTime.to_string(NaiveDateTime.utc_now()),
@@ -39,14 +37,15 @@ defmodule WritersUnblockedWeb.StoryController do
           # There is an available story.
           story ->
             # Locks story
-            waittime = Application.get_env(:writers_unblocked, Wait_Time)[:seconds_to_wait]
+            lock_lifespan = Application.get_env(:writers_unblocked, Story_Config)[:lock_lifespan]
 
-            unlocktime = NaiveDateTime.utc_now()
-              |> NaiveDateTime.add(waittime)
+            locked_until =
+              NaiveDateTime.utc_now()
+              |> NaiveDateTime.add(lock_lifespan)
 
             Story
             |> Repo.get(story.id)
-            |> Story.changeset(%{locked_until: unlocktime})
+            |> Story.changeset(%{locked_until: locked_until})
             |> Repo.update()
 
             story = Repo.get(Story, story.id)
@@ -107,11 +106,9 @@ defmodule WritersUnblockedWeb.StoryController do
               Story
               |> Repo.get(get_session(conn, :story_id))
 
-            currenttime = NaiveDateTime.utc_now()  
-
             changeset =
               Story.changeset(story,
-              %{body: "#{story.body}\n#{content}", locked_until: currenttime})
+              %{body: "#{story.body}\n#{content}", locked_until: NaiveDateTime.utc_now()})
 
             # New title submitted? Update title.
             changeset =
