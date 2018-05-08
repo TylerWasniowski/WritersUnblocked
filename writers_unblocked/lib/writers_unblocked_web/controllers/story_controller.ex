@@ -34,24 +34,24 @@ defmodule WritersUnblockedWeb.StoryController do
                 select: story
             )
           cond do
-          # No available story
-          story == nil -> conn
-          # There is an available story.
-          true ->
-            # Locks story
-            lock_lifespan = Application.get_env(:writers_unblocked, Story_Config)[:lock_lifespan]
+            # No available story
+            story == nil -> conn
+            # There is an available story.
+            true ->
+              # Locks story
+              lock_lifespan = Application.get_env(:writers_unblocked, Story_Config)[:lock_lifespan]
 
-            locked_until =
-              NaiveDateTime.utc_now()
-              |> NaiveDateTime.add(lock_lifespan)
+              locked_until =
+                NaiveDateTime.utc_now()
+                |> NaiveDateTime.add(lock_lifespan)
 
-            Story
-            |> Repo.get(story.id)
-            |> Story.changeset(%{locked_until: locked_until})
-            |> Repo.update()
+              Story
+              |> Repo.get(story.id)
+              |> Story.changeset(%{locked_until: locked_until})
+              |> Repo.update()
 
-            story = Repo.get(Story, story.id)
-            put_session(conn, :story_id, story.id)
+              story = Repo.get(Story, story.id)
+              put_session(conn, :story_id, story.id)
           end
 
         # Story is already assigned
