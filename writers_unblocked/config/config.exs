@@ -22,6 +22,18 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:user_id]
 
+config :writers_unblocked, Story,
+  entry_length: 600,
+  # Amount of characters required before a story can be finished.
+  finish_length: 2500
+
+config :writers_unblocked, Viewer,
+  # Number of random stories to display every time the viewer is entered
+  number_of_stories: 10
+
+config :writers_unblocked, Vote,
+  votes_per_user: 3
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

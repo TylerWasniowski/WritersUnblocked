@@ -1,4 +1,5 @@
 import Ecto.Changeset
+import Ecto.Query
 
 defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
@@ -12,40 +13,58 @@ defmodule WritersUnblockedWeb.StoryController do
   end
 
   def give_continue_story(conn) do
-    case (Repo |> SQL.query!("""
-                    SELECT id
-                    FROM stories
-                    WHERE NOT locked AND NOT finished
-                    ORDER BY RANDOM() LIMIT 1
-                    """, [])
-                |> Map.fetch(:rows)
-                |> elem(1)
-    ) do
-    # No available story
-    [] ->
-      conn
-      |> put_flash(:info, "No stories available to continue, you can make a new one here.")
-      |> give_new_story # and return
+    conn =
+      case get_session(conn, :story_id) do
+        nil ->
+          case (Repo.one(
+            from story in Story,
+              where: not story.locked,
+              where: not story.finished,
+              order_by: [asc: fragment("RANDOM()")],
+              limit: 1,
+              select: story
+          )) do
+          # No available story
+          nil -> conn
+          # There is an available story.
+          story ->
+            # Locks story
+            Story
+            |> Repo.get(story.id)
+            |> Story.changeset(%{locked: true})
+            |> Repo.update()
 
-    # There is an available story.
-    [story_query | _] ->
-      story_id = List.first(story_query)
-      # Locks story
-      Story
-      |> Repo.get(story_id)
-      |> Story.changeset(%{locked: true})
-      |> Repo.update()
+            story = Repo.get(Story, story.id)
+            conn = put_session(conn, :story_id, story.id)
 
+            finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+            cond do
+              byte_size(story.body) < finish_length ->
+                render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
+              true ->
+                render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
+            end
+          end
 
-      story = Repo.get(Story, story_id)
-      conn = put_session(conn, :story_id, story_id)
-
-      cond do
-        byte_size(story.body) < 920 ->
-          render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
-        byte_size(story.body) >= 920 ->
-          render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
+        # Story is already assigned
+        _ -> conn
       end
+
+    case get_session(conn, :story_id) do
+      nil ->
+        conn
+        |> put_flash(:info, "No stories available to continue, you can make a new one here.")
+        |> give_new_story
+      id ->
+        story = Repo.get(Story, id)
+
+        finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+        cond do
+          byte_size(story.body) < finish_length ->
+            render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
+          true ->
+            render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
+        end
     end
   end
 
@@ -59,11 +78,12 @@ defmodule WritersUnblockedWeb.StoryController do
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
     Logger.debug "Params of submit_entry:  #{inspect(params)}"
 
+    max_chars = Application.get_env(:writers_unblocked, Story)[:entry_length]
     cond do
       byte_size(content) == 0 ->
         text conn, "No form data."
-      String.length(content) < 3 or String.length(content) > 240 ->
-        text conn, "Expected between 3 and 240 characters. Got #{String.length(content)}."
+      String.length(content) > max_chars ->
+        text conn, "Expected less than #{max_chars} characters. Got #{String.length(content)}."
       String.printable?(content) ->
         # Inserts/updates story.
         case get_session(conn, :story_id) do
@@ -96,8 +116,9 @@ defmodule WritersUnblockedWeb.StoryController do
               case Map.fetch(params, "finish-button") do
                 :error -> changeset
                 _ ->
+                  finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
                   cond do
-                    String.length(story.body) < 920 -> changeset
+                    String.length(story.body) < finish_length -> changeset
                     true -> merge(changeset, Story.changeset(story, %{finished: true}))
                   end
               end

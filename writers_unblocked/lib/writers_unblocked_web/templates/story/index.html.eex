@@ -6,10 +6,15 @@
   <%= text_to_html @body %>
 </div>
   <div>
-    <textarea
-      minlength="3" maxlength="240" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
-      onkeyup="textCounter(this,'counter',240);" id="message"></textarea>
-    Remaining characters: <input disabled  maxlength="3" size="3" value="240" id="counter">
+    <textarea maxlength="<%=
+    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    %>" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
+      onkeyup="textCounter(this,'counter',<%=
+    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    %>);" id="message"></textarea>
+    Remaining characters: <input disabled size="3" value="<%=
+    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    %>" id="counter">
   </div> 
   <%= if @create do %>
   	<input type="submit" value="Create Story" />
