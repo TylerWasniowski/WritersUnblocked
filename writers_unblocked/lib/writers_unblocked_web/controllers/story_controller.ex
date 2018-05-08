@@ -9,7 +9,11 @@ defmodule WritersUnblockedWeb.StoryController do
   require Logger
 
   def give_new_story(conn) do
-    render conn, "index.html", title: "Untitled Story", body: "", create: true, finish: false
+    case get_session(conn, :story_id) do
+      nil -> render conn, "index.html", title: "Untitled Story", body: "", create: true, finish: false
+      # Story was already assigned.
+      _ -> give_continue_story(conn)
+    end
   end
 
   def give_continue_story(conn) do
