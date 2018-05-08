@@ -7,18 +7,18 @@
 </div>
   <div>
     <textarea maxlength="<%=
-    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    Application.get_env(:writers_unblocked, Story_Config)[:entry_length]
     %>" placeholder="What happens next?" name="append-input" required rows="4" cols="60" 
       onkeyup="textCounter(this,'counter',<%=
-    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    Application.get_env(:writers_unblocked, Story_Config)[:entry_length]
     %>);" id="message"></textarea>
     Remaining characters: <input disabled size="3" value="<%=
-    Application.get_env(:writers_unblocked, Story)[:entry_length]
+    Application.get_env(:writers_unblocked, Story_Config)[:entry_length]
     %>" id="counter">
   </div> 
   <%= if @create do %>
   	<input type="submit" value="Create Story" />
-  <% else %>
+  <%= else %>
   	<input type="submit" value="Append to Story" />
   <% end %>
   

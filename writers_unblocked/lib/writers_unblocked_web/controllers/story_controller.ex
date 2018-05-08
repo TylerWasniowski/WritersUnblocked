@@ -43,15 +43,7 @@ defmodule WritersUnblockedWeb.StoryController do
             |> Repo.update()
 
             story = Repo.get(Story, story.id)
-            conn = put_session(conn, :story_id, story.id)
-
-            finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
-            cond do
-              byte_size(story.body) < finish_length ->
-                render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
-              true ->
-                render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
-            end
+            put_session(conn, :story_id, story.id)
           end
 
         # Story is already assigned
@@ -66,9 +58,14 @@ defmodule WritersUnblockedWeb.StoryController do
       id ->
         story = Repo.get(Story, id)
 
-        finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+        test_all = Application.get_env(:writers_unblocked, Story_Config)
+        Logger.debug "TESTING: #{inspect test_all}"
+
+        finish_length = Application.get_env(:writers_unblocked, Story_Config)[:finish_length]
+        Logger.debug "Story length: #{String.length(story.body)}"
+        Logger.debug "Finish length: #{inspect finish_length}"
         cond do
-          byte_size(story.body) < finish_length ->
+          String.length(story.body) < finish_length ->
             render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
           true ->
             render conn, "index.html", title: story.title, body: story.body, create: false, finish: true
@@ -86,7 +83,7 @@ defmodule WritersUnblockedWeb.StoryController do
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
     Logger.debug "Params of submit_entry:  #{inspect params}"
 
-    max_chars = Application.get_env(:writers_unblocked, Story)[:entry_length]
+    max_chars = Application.get_env(:writers_unblocked, Story_Config)[:entry_length]
     cond do
       byte_size(content) == 0 ->
         text conn, "No form data."
@@ -124,7 +121,7 @@ defmodule WritersUnblockedWeb.StoryController do
               case Map.fetch(params, "finish-button") do
                 :error -> changeset
                 _ ->
-                  finish_length = Application.get_env(:writers_unblocked, Story)[:finish_length]
+                  finish_length = Application.get_env(:writers_unblocked, Story_Config)[:finish_length]
                   cond do
                     String.length(story.body) < finish_length -> changeset
                     true -> merge(changeset, Story.changeset(story, %{finished: true}))
