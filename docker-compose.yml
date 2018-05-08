@@ -1,0 +1,22 @@
+version: '3'
+services:
+    writers-unblocked:
+        build: .
+        environment:
+            DB_USER: ${DB_USER}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_NAME: ${DB_NAME}
+            DB_HOST: postgres # Host name of service
+        ports:
+            - "4000:4000"
+        depends_on:
+            - postgres
+        restart: unless-stopped
+    postgres: # DB_HOST
+        image: postgres:alpine
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - ./db_data:/var/lib/postgresql/data
+        restart: unless-stopped
