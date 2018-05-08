@@ -27,7 +27,7 @@ defmodule WritersUnblockedWeb.ViewerController do
             select: story
       end
 
-    Logger.debug "vote_id: #{get_session(conn, :vote_id)}"
-    render conn, "index.html", stories: Repo.all(query), vote_id: get_session(conn, :vote_id)
+    Logger.debug "votes: #{inspect get_session(conn, :votes)}"
+    render conn, "index.html", stories: Repo.all(query), votes: get_session(conn, :votes)
   end
 end

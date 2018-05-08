@@ -80,7 +80,7 @@ defmodule WritersUnblockedWeb.StoryController do
   end
 
   def submit_entry(conn, %{"title" => title, "append-input" => content} = params) do
-    Logger.debug "Params of submit_entry:  #{inspect(params)}"
+    Logger.debug "Params of submit_entry:  #{inspect params}"
 
     max_chars = Application.get_env(:writers_unblocked, Story)[:entry_length]
     cond do
@@ -141,15 +141,28 @@ defmodule WritersUnblockedWeb.StoryController do
   end
 
   def vote(conn, %{"id" => id}) do
-    Logger.debug "Old vote_id: #{get_session(conn, :vote_id)}"
+    Logger.debug "Old votes: #{inspect get_session(conn, :votes)}"
     Logger.debug "Voting for: #{id}"
 
-    case get_session(conn, :vote_id) do
-      nil ->
-        put_session(conn, :vote_id, elem(Integer.parse(id), 0))
-        |> text("Voted for id: #{id}")
-      _ -> text conn, "Sorry, you already voted before."
-    end
+    id = elem(Integer.parse(id), 0)
+    votes_per_user = Application.get_env(:writers_unblocked, Vote)[:votes_per_user]
+    votes = get_session(conn, :votes)
+    conn =
+      cond do
+        votes == nil -> put_session(conn, :votes, [id])
+        length(votes) < votes_per_user -> put_session(conn, :votes, [id] ++ votes)
+        true -> conn
+      end
+
+    story = Repo.get(Story, id)
+
+    story
+    |> Story.changeset(%{votes: story.votes + 1})
+    |> Repo.update()
+
+    all_votes_used = length(get_session(conn, :votes)) >= votes_per_user
+
+    json(conn, %{allVotesUsed: all_votes_used})
   end
 
   # Automatically capitalize title (made by Jon)

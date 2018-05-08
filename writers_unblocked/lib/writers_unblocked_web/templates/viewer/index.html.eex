@@ -1,6 +1,7 @@
 <div id="stories" <%=
-	if @vote_id != nil do
-		"class=voted"
+	votes_per_user = Application.get_env(:writers_unblocked, Vote)[:votes_per_user]
+	if @votes != nil && length(@votes) >= votes_per_user do
+		"class=all-votes-used"
 	end
 %>>
 	<%= for story <- @stories do %>
@@ -10,7 +11,7 @@
 				<tr>
 					<td>
 							<div class="<%=
-								if @vote_id == story.id do
+								if @votes != nil && Enum.member?(@votes, story.id) do
 									"voted-icon"
 								else
 									"vote-icon"

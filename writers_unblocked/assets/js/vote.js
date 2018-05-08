@@ -1,10 +1,6 @@
 export var Vote = {
     armVoting: function() {
         document.addEventListener('DOMContentLoaded', function() {
-            // If user has already voted, don't arm vote icons
-            if (document.querySelector('.voted-icon'))
-                return;
-
             document.querySelectorAll('.story')
                 .forEach(
                     (storyDiv) =>
@@ -19,8 +15,8 @@ export var Vote = {
 
                         const storiesDiv = document.querySelector('#stories')
                         voteDiv.addEventListener('click', (event) => {
-                            // Don't do anything if user already voted
-                            if (storiesDiv.classList.contains('voted'))
+                            // Don't do anything if user already used all votes
+                            if (storiesDiv.classList.contains('all-votes-used'))
                                 return;
                                 
                             fetch('/vote', {
@@ -31,11 +27,16 @@ export var Vote = {
                                 },
                                 body: data
                             })
-                            .then(() => {                                
+                            .then((response) => {                     
                                 voteDiv.classList.remove('vote-icon')
                                 voteDiv.classList.add('voted-icon')
                                 
-                                storiesDiv.classList.add('voted')
+                                response.json().then(
+                                    (json) => {
+                                        if (json.allVotesUsed)
+                                            storiesDiv.classList.add('all-votes-used')
+                                    }
+                                )
                             })
                         })
                     }
