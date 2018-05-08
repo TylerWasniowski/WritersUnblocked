@@ -5,14 +5,18 @@ defmodule WritersUnblockedWeb.StoryController do
   use WritersUnblockedWeb, :controller
   alias WritersUnblocked.Repo
   alias WritersUnblocked.Story
-  alias Ecto.Adapters.SQL
   require Logger
 
   def give_new_story(conn) do
     case get_session(conn, :story_id) do
       nil -> render conn, "index.html", title: "Untitled Story", body: "", create: true, finish: false
       # Story was already assigned.
-      _ -> give_continue_story(conn)
+      _ ->
+        conn
+        |> put_flash(:info,
+        "You're already assigned to this story.
+        Please contribute before making a new one.")
+        |> give_continue_story()
     end
   end
 
