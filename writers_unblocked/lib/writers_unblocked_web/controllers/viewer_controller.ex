@@ -22,7 +22,6 @@ defmodule WritersUnblockedWeb.ViewerController do
           from story in Story,
             where: story.id == ^id,
             where: story.finished,
-            order_by: [asc: fragment("RANDOM()")],
             limit: ^number_of_stories,
             select: story
       end
