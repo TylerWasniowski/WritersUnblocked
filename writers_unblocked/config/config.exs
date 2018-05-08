@@ -25,7 +25,8 @@ config :logger, :console,
 config :writers_unblocked, Story_Config,
   entry_length: 600,
   # Amount of characters required before a story can be finished.
-  finish_length: 2500
+  finish_length: 2500,
+  lock_lifespan: 3600
 
 config :writers_unblocked, Viewer,
   # Number of random stories to display every time the viewer is entered

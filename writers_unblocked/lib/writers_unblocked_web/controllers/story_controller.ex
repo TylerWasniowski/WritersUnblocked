@@ -65,12 +65,7 @@ defmodule WritersUnblockedWeb.StoryController do
       id ->
         story = Repo.get(Story, id)
 
-        test_all = Application.get_env(:writers_unblocked, Story_Config)
-        Logger.debug "TESTING: #{inspect test_all}"
-
         finish_length = Application.get_env(:writers_unblocked, Story_Config)[:finish_length]
-        Logger.debug "Story length: #{String.length(story.body)}"
-        Logger.debug "Finish length: #{inspect finish_length}"
         cond do
           String.length(story.body) < finish_length ->
             render conn, "index.html", title: story.title, body: story.body, create: false, finish: false
