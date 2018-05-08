@@ -38,6 +38,7 @@ WORKDIR /app
 # create the digests
 RUN mix phx.digest
 
-RUN mix ecto.migrate
+# create the main repo
+RUN mix ecto.create
 
-CMD mix ecto.create && mix phx.server
+CMD mix ecto.migrate && mix phx.server
