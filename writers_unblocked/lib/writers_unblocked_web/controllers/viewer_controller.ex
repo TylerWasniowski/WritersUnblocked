@@ -22,7 +22,7 @@ defmodule WritersUnblockedWeb.ViewerController do
           from story in Story,
             where: story.id == ^id,
             where: story.finished,
-            limit: ^number_of_stories,
+            limit: 1,
             select: story
       end
 
