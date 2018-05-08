@@ -1,3 +1,4 @@
+<p>These are a few random finshed stories. You may vote for up to 3 every 24 hours.</p>
 <div id="stories" <%=
 	votes_per_user = Application.get_env(:writers_unblocked, Vote)[:votes_per_user]
 	if @votes != nil && length(@votes) >= votes_per_user do
