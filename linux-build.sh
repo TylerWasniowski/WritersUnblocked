@@ -6,8 +6,8 @@ set -e
 wget https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_19.0-1~ubuntu~xenial_amd64.deb
 wget https://packages.erlang-solutions.com/erlang/elixir/FLAVOUR_2_download/elixir_1.4.2-1~ubuntu~xenial_amd64.deb
 
-sudo gdebi esl-erlang_19.0-1ubuntuxenial_amd64.deb
-sudo gdebi elixir_1.4.2-1ubuntuxenial_amd64.deb
+sudo gdebi esl-erlang_19.0-1~ubuntu~xenial_amd64.deb
+sudo gdebi elixir_1.4.2-1~ubuntu~xenial_amd64.deb
 
 mix local.hex
 
